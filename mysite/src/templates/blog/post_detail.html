@@ -1,0 +1,13 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+
+<div class="col-lg-8 col-lg-offset-2 detail">
+{% if user.is_authenticated %}
+<a href="{% url 'blog.views.post_edit' pk=post.pk %}"><span class="sz glyphicon glyphicon-pencil pull-right" aria-hidden="true"></span></a>
+<a href="{% url 'blog.views.post_delete' pk=post.pk %}"><span class="glyphicon glyphicon-remove pull-right szc" aria-hidden="true"></span></a>
+{% endif %}
+	<p>{{ post.datetime }}</p>
+	<h2 class="title text-center">{{ post.title }}</h2>
+	<p class="detail_descr">{{ post.content }}</p>
+</div>
+{% endblock %}

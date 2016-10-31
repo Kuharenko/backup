@@ -1,0 +1,40 @@
+body {
+  padding-top: 80px;
+}
+
+
+.post{
+	background-color: #efefef;
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin-bottom: 5px;
+	padding-bottom: 50px;
+
+}
+
+.date{
+	font-size: 12px;
+	color: #877;
+}
+.description{
+	font-size: 18px;
+}
+.title{
+	text-transform: uppercase;
+	font-weight: 600;
+}
+
+.detail{
+	padding: 20px;
+	background-color: #fbf6f6;
+
+}
+
+.sz{
+	font-size: 30px;
+}
+.szc{
+	font-size: 30px;
+	color: red;
+}
