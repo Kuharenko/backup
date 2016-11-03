@@ -1,24 +1,59 @@
-#coding: utf-8
+# coding: utf-8
 
-from django.shortcuts import render, redirect,get_object_or_404
+from django.shortcuts import render
 from django.utils import timezone
-from .forms import PostForm
-from blog.models import Post 
+from .forms import PostForm, CommentForm
+from blog.models import Post, Comment
 from django.views.generic import ListView, DetailView
-# Create your views here.
+from django.shortcuts import redirect, render_to_response, get_object_or_404
+from django.template import RequestContext
+
 
 def index(request):
-	return render(request,'blog/index.html',{})
+    return render(request, 'blog/post_list.html', {})
 
 
-
-class PostsListView(ListView): # представление в виде списка
-    model = Post                   # модель для представления 
-
-class PostDetailView(DetailView): # детализированное представление модели
+class PostsListView(ListView):  # представление в виде списка
     model = Post
 
+
+class PostDetailView(DetailView):  # детализированное представление модели
+    model = Post
+
+
+def adminka(request):
+    if request.user.is_anonymous():
+        return render(request, 'blog/deny.html')
+    else:
+        if request.user.is_superuser:
+            posts = Post.objects.all()
+            return render(request, 'blog/adminka.html', {'posts': posts})
+        else:
+            return render(request, 'blog/deny.html')
+
+
+def view_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    form = CommentForm(request.POST or None)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.post = post
+        comment.created_date = timezone.now()
+        comment.save()
+        return redirect(request.path)
+    form.initial['author'] = request.user
+    return render_to_response('blog/post_detail.html',
+                              {
+                                  'post': post,
+                                  'form': form,
+                              },
+                              context_instance=RequestContext(request))
+
+
 def post_new(request):
+    if request.user.is_anonymous():
+        return render(request, 'blog/deny.html')
+    else:
         if request.method == "POST":
             form = PostForm(request.POST)
             if form.is_valid():
@@ -30,7 +65,11 @@ def post_new(request):
             form = PostForm()
         return render(request, 'blog/post_edit.html', {'form': form})
 
+
 def post_edit(request, pk):
+    if request.user.is_anonymous():
+        return render(request, 'blog/deny.html')
+    else:
         post = get_object_or_404(Post, pk=pk)
         if request.method == "POST":
             form = PostForm(request.POST, instance=post)
@@ -43,7 +82,19 @@ def post_edit(request, pk):
             form = PostForm(instance=post)
         return render(request, 'blog/post_edit.html', {'form': form})
 
+
 def post_delete(request, pk):
-		instance = Post.objects.get(id=pk)
-		instance.delete()
-		return redirect('list')
+    if request.user.is_anonymous():
+        return render(request, 'blog/deny.html')
+    else:
+        instance = Post.objects.get(id=pk)
+        instance.delete()
+        return redirect('admin')
+
+
+class CommentsListView(ListView):
+    model = Comment
+
+
+def about(request):
+    return render(request, 'blog/about.html', {})

@@ -10,4 +10,34 @@
 	<h2 class="title text-center">{{ post.title }}</h2>
 	<p class="detail_descr">{{ post.content }}</p>
 </div>
+    {% if post.comment_set.all %}
+        <div class="col-lg-8 col-lg-offset-2 detail">
+<h2 class="text-center">Комментарии</h2>
+<div class="comments">
+    {% for comment in post.comment_set.all %}
+        <span>
+            <a href="#">{{ comment.author }}</a> said on {{ comment.created_date }}
+        </span>
+        <p>
+            {{ comment.text }}
+        </p>
+        <hr>
+    {% endfor %}
+</div>
+        </div>
+{% endif %}
+
+<br />
+     <div class="col-lg-8 col-lg-offset-2 detail">
+    <h2 class="text-center">Добавить коммент</h2>
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_p }}
+    </table>
+    <button type="submit" class="btn btn-success">Добавить</button>
+</form>
+    </div>
+
 {% endblock %}
