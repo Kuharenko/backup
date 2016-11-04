@@ -22,10 +22,9 @@
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="{% url 'list' %}">Home</a></li>
 						<li><a href="{% url 'about' %}">About</a></li>
-						<li><a href="{% url 'comments' %}">Comments</a></li>
-						{% if user.is_authenticated %}
-							<li><a href="{% url 'blog.views.post_new' %}">New</a></li>
-						{% endif %}
+                        {% if request.user.is_superuser %}
+                        <li><a href="{% url 'admin' %}">Admin</a></li>
+                        {% endif %}
 					</ul>
 				</div><!--/.nav-collapse -->
 			</div>

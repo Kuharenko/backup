@@ -82,7 +82,7 @@ DATABASES = {
         'NAME': 'testing',
         'USER': 'root',
         'PASSWORD': ' ',
-        'OPTIONS': {'charset': 'utf8'},
+        'OPTIONS': {'charset': 'utf8mb4'},
     }
 }
 

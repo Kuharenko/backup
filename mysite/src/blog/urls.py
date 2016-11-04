@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- coding: utf8 -*-
 from django.conf.urls import patterns, url
 from . import views
 from blog.views import PostsListView, CommentsListView
@@ -12,5 +12,7 @@ urlpatterns = patterns('',
                        url(r'^about/$', views.about, name='about'),
                        url(r'^admin/(?P<pk>[0-9]+)/delete/$', views.post_delete, name='post_delete'),
                        url(r'^admin/(?P<pk>[0-9]+)/edit/$', views.post_edit, name='post_edit'),
+                       url(r'^admin/comm/(?P<rk>[0-9]+)/(?P<pk>[0-9]+)/delete/$', views.comment_delete, name='comment_delete'),
+                       url(r'^admin/comm/(?P<pk>[0-9]+)/edit/$', views.comment_edit, name='comment_edit'),
                        url(r'^admin/$', views.adminka, name='admin'),
                        )

@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="col-lg-8 col-lg-offset-2 detail">
-{% if user.is_authenticated %}
+{% if user.is_superuser %}
 <a href="{% url 'blog.views.post_edit' pk=post.pk %}"><span class="sz glyphicon glyphicon-pencil pull-right" aria-hidden="true"></span></a>
 <a href="{% url 'blog.views.post_delete' pk=post.pk %}"><span class="glyphicon glyphicon-remove pull-right szc" aria-hidden="true"></span></a>
 {% endif %}
@@ -16,7 +16,11 @@
 <div class="comments">
     {% for comment in post.comment_set.all %}
         <span>
-            <a href="#">{{ comment.author }}</a> said on {{ comment.created_date }}
+            <a href="{% url 'blog.views.comment_edit' pk=comment.pk %}">{{ comment.author }}</a> said on {{ comment.created_date }}
+            {% if user.is_superuser %}
+                <a href="{% url 'blog.views.comment_edit' pk=comment.pk %}"><span class="sz glyphicon glyphicon-pencil pull-right" aria-hidden="true"></span></a>
+                <a href="{% url 'blog.views.comment_delete' rk=post.pk pk=comment.pk %}"><span class="glyphicon glyphicon-remove pull-right szc" aria-hidden="true"></span></a>
+{% endif %}
         </span>
         <p>
             {{ comment.text }}

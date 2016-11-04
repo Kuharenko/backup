@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- coding: utf8 -*-
 
 from django.shortcuts import render
 from django.utils import timezone
@@ -51,9 +51,7 @@ def view_post(request, pk):
 
 
 def post_new(request):
-    if request.user.is_anonymous():
-        return render(request, 'blog/deny.html')
-    else:
+    if request.user.is_superuser:
         if request.method == "POST":
             form = PostForm(request.POST)
             if form.is_valid():
@@ -64,12 +62,12 @@ def post_new(request):
         else:
             form = PostForm()
         return render(request, 'blog/post_edit.html', {'form': form})
+    else:
+        return render(request, 'blog/deny.html')
 
 
 def post_edit(request, pk):
-    if request.user.is_anonymous():
-        return render(request, 'blog/deny.html')
-    else:
+    if request.user.is_superuser:
         post = get_object_or_404(Post, pk=pk)
         if request.method == "POST":
             form = PostForm(request.POST, instance=post)
@@ -81,15 +79,17 @@ def post_edit(request, pk):
         else:
             form = PostForm(instance=post)
         return render(request, 'blog/post_edit.html', {'form': form})
+    else:
+        return render(request, 'blog/deny.html')
 
 
 def post_delete(request, pk):
-    if request.user.is_anonymous():
-        return render(request, 'blog/deny.html')
-    else:
+    if request.user.is_superuser:
         instance = Post.objects.get(id=pk)
         instance.delete()
         return redirect('admin')
+    else:
+        return render(request, 'blog/deny.html')
 
 
 class CommentsListView(ListView):
@@ -98,3 +98,31 @@ class CommentsListView(ListView):
 
 def about(request):
     return render(request, 'blog/about.html', {})
+
+
+def comment_edit(request, pk):
+    if request.user.is_superuser:
+        comm = get_object_or_404(Comment, pk=pk)
+        if request.method == "POST":
+            form = CommentForm(request.POST, instance=comm)
+            if form.is_valid():
+                comm = form.save(commit=False)
+                comm.datetime = timezone.now()
+                comm.save()
+                return redirect('post_detail', pk=comm.pk)
+        else:
+            form = CommentForm(instance=comm)
+        return render(request, 'blog/comm_edit.html', {'form': form})
+    else:
+        return render(request, 'blog/deny.html')
+
+#КАКАШКА!!!!
+
+
+def comment_delete(request, pk, rk):
+    if request.user.is_superuser:
+        instance = Comment.objects.get(id=pk)
+        instance.delete()
+        return redirect('post_detail', pk=rk)
+    else:
+        return render(request, 'blog/deny.html')
