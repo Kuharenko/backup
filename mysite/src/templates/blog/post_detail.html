@@ -10,12 +10,18 @@
     <p><b>Category:</b> <a href="#">{{ post.category }}</a></p>
 	<h2 class="title text-center">{{ post.title }}</h2>
 	<p class="detail_descr">{{ post.content }}</p>
-        <p class="pull-right">
+        <h3><p class="pull-right">
             <b>tags:</b>
+
             {% for tag in post.tages.tags.all %}
                 <a href="#">{{ tag }} </a>
             {% endfor %}
         </p>
+        </h3>
+<h3 class="">
+<a title="Понравилось" class="btn btn-success" href="{{ post.get_absolute_url }}addlike/?next={{ post.get_absolute_url|urlencode:"" }}">
+    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> {{ post.get_likes }}</a>
+    </h3>
 </div>
     {% if post.comment_set.all %}
         <div class="col-lg-8 col-lg-offset-2 detail">

@@ -40,6 +40,7 @@ class Post(models.Model):
     views_count = models.IntegerField(default=0)
     likes_count = models.IntegerField(default=0)
 
+
     def __unicode__(self):
         return self.title
 
@@ -63,11 +64,20 @@ class Comment(models.Model):
         self.approved_comment = True
         self.save()
 
+    @property
     def __unicode__(self):
         return self.text
 
 
+class ClickLike(models.Model):
+    post = models.ForeignKey(Post)
+    user = models.IntegerField(default=0)
 
+    def user_vote(self):
+        return self.user
+
+    def __unicode__(self):
+        return u"%s" % self.id
 
 
 

@@ -11,7 +11,9 @@
 				<p class=" description">{{ post.content }}</p>
 				<p class="date pull-right">{{ post.datetime }}</p>
 			</div>
-            <h3 class="">Views: {{ post.get_likes }} Likes: {{ post.title }}</h3>
+            <h4 class=""><span title="Просмотры"
+class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> {{ post.get_views }} <span title="Понравилось" class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> {{ post.get_likes }}</h4>
+
 		</div>
 		{% empty %}
 		<p>Нет постов</p>

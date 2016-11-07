@@ -15,4 +15,5 @@ urlpatterns = patterns('',
                        url(r'^admin/comm/(?P<rk>[0-9]+)/(?P<pk>[0-9]+)/delete/$', views.comment_delete, name='comment_delete'),
                        url(r'^admin/comm/(?P<pk>[0-9]+)/edit/$', views.comment_edit, name='comment_edit'),
                        url(r'^admin/$', views.adminka, name='admin'),
+                       url(r'^(?P<pk>\d+)/addlike/$', views.add_like, name='add_like')
                        )

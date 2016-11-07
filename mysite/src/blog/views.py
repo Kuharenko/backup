@@ -3,7 +3,7 @@
 from django.shortcuts import render
 from django.utils import timezone
 from .forms import PostForm, CommentForm
-from blog.models import Post, Comment, Category, Tags, TagToPost
+from blog.models import Post, Comment, Category, Tags, TagToPost, ClickLike
 from django.views.generic import ListView, DetailView
 from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.template import RequestContext
@@ -11,6 +11,22 @@ from django.template import RequestContext
 
 def index(request):
     return render(request, 'blog/post_list.html', {})
+
+
+def add_like(request, pk):
+    try:
+        cl = ClickLike.objects.get(user=request.user.id)
+    except ClickLike.DoesNotExist:
+        if request.user.id:
+            article = get_object_or_404(Post, pk=pk)
+            article.likes_count += 1
+            cl = ClickLike.objects.create(post=article, user=request.user.id)
+            cl.save()
+            article.save()
+            return redirect(request.GET.get('next', '/'))
+        else:
+            return redirect(request.GET.get('next', '/'))
+    return redirect(request.GET.get('next', '/'))
 
 
 class PostsListView(ListView):  # представление в виде списка
@@ -35,7 +51,8 @@ def adminka(request):
 def view_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
     form = CommentForm(request.POST or None)
-
+    post.views_count += 1
+    post.save()
     if form.is_valid():
         comment = form.save(commit=False)
         comment.post = post
@@ -117,7 +134,8 @@ def comment_edit(request, pk):
     else:
         return render(request, 'blog/deny.html')
 
-#КАКАШКА!!!!
+
+# КАКАШКА!!!!
 
 
 def comment_delete(request, pk, rk):

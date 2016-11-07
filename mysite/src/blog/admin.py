@@ -7,11 +7,12 @@ from django.contrib import admin
 
 from blog.models import Post  # наша модель из blog/models.py
 
-from blog.models import Comment, Category, Tags, TagToPost  # наша модель из blog/models.py
+from blog.models import Comment, Category, Tags, TagToPost, ClickLike  # наша модель из blog/models.py
 
 admin.site.register(Post)
 admin.site.register(Comment)
 admin.site.register(Category)
 admin.site.register(Tags)
 admin.site.register(TagToPost)
+admin.site.register(ClickLike)
 
