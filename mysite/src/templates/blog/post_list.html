@@ -11,6 +11,7 @@
 				<p class=" description">{{ post.content }}</p>
 				<p class="date pull-right">{{ post.datetime }}</p>
 			</div>
+            <h3 class="">Views: {{ post.get_likes }} Likes: {{ post.title }}</h3>
 		</div>
 		{% empty %}
 		<p>Нет постов</p>

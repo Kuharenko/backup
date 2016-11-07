@@ -7,8 +7,15 @@
 <a href="{% url 'blog.views.post_delete' pk=post.pk %}"><span class="glyphicon glyphicon-remove pull-right szc" aria-hidden="true"></span></a>
 {% endif %}
 	<p>{{ post.datetime }}</p>
+    <p><b>Category:</b> <a href="#">{{ post.category }}</a></p>
 	<h2 class="title text-center">{{ post.title }}</h2>
 	<p class="detail_descr">{{ post.content }}</p>
+        <p class="pull-right">
+            <b>tags:</b>
+            {% for tag in post.tages.tags.all %}
+                <a href="#">{{ tag }} </a>
+            {% endfor %}
+        </p>
 </div>
     {% if post.comment_set.all %}
         <div class="col-lg-8 col-lg-offset-2 detail">
@@ -27,6 +34,7 @@
         </p>
         <hr>
     {% endfor %}
+
 </div>
         </div>
 {% endif %}

@@ -3,7 +3,7 @@
 from django.shortcuts import render
 from django.utils import timezone
 from .forms import PostForm, CommentForm
-from blog.models import Post, Comment
+from blog.models import Post, Comment, Category, Tags, TagToPost
 from django.views.generic import ListView, DetailView
 from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.template import RequestContext
@@ -35,6 +35,7 @@ def adminka(request):
 def view_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
     form = CommentForm(request.POST or None)
+
     if form.is_valid():
         comment = form.save(commit=False)
         comment.post = post
