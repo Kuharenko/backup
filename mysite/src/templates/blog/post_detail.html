@@ -7,17 +7,21 @@
 <a href="{% url 'blog.views.post_delete' pk=post.pk %}"><span class="glyphicon glyphicon-remove pull-right szc" aria-hidden="true"></span></a>
 {% endif %}
 	<p>{{ post.datetime }}</p>
-    <p><b>Category:</b> <a href="#">{{ post.category }}</a></p>
+    <p><b>Категории:</b>
+        {% for cat in post.category.all %}
+             <a href="#">{{ cat }}</a>
+        {% endfor %}
+</p>
 	<h2 class="title text-center">{{ post.title }}</h2>
 	<p class="detail_descr">{{ post.content }}</p>
-        <h3><p class="pull-right">
-            <b>tags:</b>
+        <h6><p class="pull-right">
+            <b>тэги:</b>
 
-            {% for tag in post.tages.tags.all %}
+            {% for tag in post.tages.all %}
                 <a href="#">{{ tag }} </a>
             {% endfor %}
         </p>
-        </h3>
+        </h6>
 <h3 class="">
 <a title="Понравилось" class="btn btn-success" href="{{ post.get_absolute_url }}addlike/?next={{ post.get_absolute_url|urlencode:"" }}">
     <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> {{ post.get_likes }}</a>

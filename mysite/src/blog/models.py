@@ -23,23 +23,14 @@ class Tags(models.Model):
         return self.tag_name
 
 
-class TagToPost(models.Model):
-    name = models.CharField(max_length=128)
-    tags = models.ManyToManyField(Tags)
-
-    def __unicode__(self):
-        return self.name
-
-
 class Post(models.Model):
     title = models.CharField(max_length=255)  # заголовок поста
     datetime = models.DateTimeField("data")  # дата публикации
     content = models.TextField(max_length=10000)  # текст поста
-    category = models.ForeignKey(Category)
-    tages = models.ForeignKey(TagToPost)
+    category = models.ManyToManyField(Category)
+    tages = models.ManyToManyField(Tags)
     views_count = models.IntegerField(default=0)
     likes_count = models.IntegerField(default=0)
-
 
     def __unicode__(self):
         return self.title
@@ -52,6 +43,7 @@ class Post(models.Model):
 
     def get_views(self):
         return self.views_count
+
 
 class Comment(models.Model):
     post = models.ForeignKey(Post)

@@ -3,7 +3,7 @@
 from django.shortcuts import render
 from django.utils import timezone
 from .forms import PostForm, CommentForm
-from blog.models import Post, Comment, Category, Tags, TagToPost, ClickLike
+from blog.models import Post, Comment, Category, Tags, ClickLike
 from django.views.generic import ListView, DetailView
 from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.template import RequestContext
@@ -15,7 +15,7 @@ def index(request):
 
 def add_like(request, pk):
     try:
-        cl = ClickLike.objects.get(user=request.user.id)
+        cl = ClickLike.objects.get(user=request.user.id, post=pk)
     except ClickLike.DoesNotExist:
         if request.user.id:
             article = get_object_or_404(Post, pk=pk)
@@ -72,11 +72,26 @@ def post_new(request):
     if request.user.is_superuser:
         if request.method == "POST":
             form = PostForm(request.POST)
+
+            cats = []
+            tags = []
+
+            for a in request.POST.getlist('category'):
+                cats.append(int(a))
+            for a in request.POST.getlist('tages'):
+                tags.append(int(a))
+
             if form.is_valid():
                 post = form.save(commit=False)
                 post.datetime = timezone.now()
                 post.save()
+
+                post.category = cats
+                post.tages = tags
+                post.save()
                 return redirect('post_detail', pk=post.pk)
+            else:
+                print form.errors
         else:
             form = PostForm()
         return render(request, 'blog/post_edit.html', {'form': form})
@@ -89,11 +104,23 @@ def post_edit(request, pk):
         post = get_object_or_404(Post, pk=pk)
         if request.method == "POST":
             form = PostForm(request.POST, instance=post)
+            cats = []
+            tags = []
+
+            for a in request.POST.getlist('category'):
+                cats.append(int(a))
+            for a in request.POST.getlist('tages'):
+                tags.append(int(a))
+
             if form.is_valid():
                 post = form.save(commit=False)
                 post.datetime = timezone.now()
+                post.category = cats
+                post.tages = tags
                 post.save()
                 return redirect('post_detail', pk=post.pk)
+            else:
+                print form.errors
         else:
             form = PostForm(instance=post)
         return render(request, 'blog/post_edit.html', {'form': form})
