@@ -1,0 +1,24 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+Comments
+{% endblock title %}
+{% block content %}
+<div class=".container-fluid">
+	<div class="col-lg-8 col-lg-offset-2">
+		{% for post in list %}
+		<div class="post">
+
+			<h3 class="title"><a href="{{ post.get_absolute_url }}">{{ post.author }}</a></h3>
+			<div>
+				<p class=" description">{{ post.text }}</p>
+				<p class="date pull-right">{{ post.created_date }}</p>
+			</div>
+		</div>
+		{% empty %}
+		<p>Нет постов</p>
+
+		{% endfor %}
+	</div>
+</div>
+{% endblock content %}

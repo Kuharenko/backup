@@ -1,0 +1,49 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <div class="col-lg-9 col-lg-offset-1">
+        {% for posts in list %}
+            <div class="post">
+                <h3 class="title"><a href="{{ posts.get_absolute_url }}">{{ posts.title }}</a></h3>
+                <div>
+                    <p class=" description">{{ posts.content }}</p>
+                    <p class="date pull-right">{{ posts.datetime }}</p>
+                </div>
+                <h4 class="">
+                    <span title="Просмотры" class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                    {{ posts.get_views }}
+                    <span title="Понравилось" class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                    {{ posts.get_likes }}
+                    <span title="Просмотры" class=" glyphicon glyphicon-comment" aria-hidden="true"></span>
+                    {{ posts.comment_set.count }}
+                </h4>
+            </div>
+        {% empty %}
+            <p>Нет постов</p>
+        {% endfor %}
+        <nav aria-label="Page navigation" class="text-center">
+            <ul class="pagination">
+                {% if post.has_previous %}
+                    <li>
+                        <a href="?page={{ post.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+                <li>
+                <span class="current">
+                        {{ post.number }} / {{ post.paginator.num_pages }}
+                 </span>
+                </li>
+                {% if post.has_next %}
+                    <li>
+                        <a href="?page={{ post.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </nav>
+    </div>
+{%  endblock %}

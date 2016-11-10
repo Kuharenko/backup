@@ -1,0 +1,78 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+
+    <div class="col-lg-8 col-lg-offset-2 detail">
+        {% if user.is_superuser %}
+            <a href="{% url 'post_edit' pk=post.pk %}"><span class="sz glyphicon glyphicon-pencil pull-right" aria-hidden="true"></span></a>
+            <a href="{% url 'post_delete' pk=post.pk %}"><span class="glyphicon glyphicon-remove pull-right szc" aria-hidden="true"></span></a>
+        {% endif %}
+        <p>{{ post.datetime }}</p>
+        <p><b>Категории:</b>
+            {% for cat in post.category.all %}
+                <a href="{%  url 'by_category' pk=cat.pk %}">{{ cat }}</a>
+            {% endfor %}
+        </p>
+        <h2 class="title text-center">{{ post.title }}</h2>
+        <p class="detail_descr">{{ post.content }}</p>
+        <h6><p class="pull-right">
+            <b>тэги:</b>
+
+            {% for tag in post.tages.all %}
+                <a href="{% url 'by_tag' pk=tag.pk %}">{{ tag }} </a>
+            {% endfor %}
+        </p>
+        </h6>
+        <h3 class="">
+            <a title="Понравилось" class="btn btn-success"
+               href="{{ post.get_absolute_url }}addlike/?next={{ post.get_absolute_url|urlencode:"" }}">
+                <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> {{ post.get_likes }}</a>
+        </h3>
+    </div>
+    {% if post.comment_set.all %}
+        <div class="col-lg-8 col-lg-offset-2 detail">
+            <h2 class="text-center">Комментарии</h2>
+            <div class="comments">
+
+                {% for comment in post.comment_set.all %}
+                    <blockquote>
+        <span>
+            <a href="{% url 'comment_edit' pk=comment.pk %}">{{ comment.author }}</a> said on {{ comment.created_date }}
+            {% if user.is_superuser %}
+                <a href="{% url 'comment_edit' pk=comment.pk %}"><span class="sz glyphicon glyphicon-pencil pull-right" aria-hidden="true"></span></a>
+                <a href="{% url 'comment_delete' rk=post.pk pk=comment.pk %}"><span class="glyphicon glyphicon-remove pull-right szc" aria-hidden="true"></span></a>
+            {% endif %}
+        </span>
+                        <p>
+                            {{ comment.text }}
+                        </p>
+                    </blockquote>
+                {% endfor %}
+
+            </div>
+        </div>
+    {% endif %}
+
+    <br />
+    <div class="col-lg-8 col-lg-offset-2 detail">
+        <h2 class="text-center">Добавить коммент</h2>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+{#            <div class="form-group">#}
+{#                <label class="control-label col-sm-2" for="content">Автор:</label>#}
+{#                <div class="col-sm-10">#}
+{#                    {{ form.author }}#}
+{#                </div>#}
+{#            </div>#}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="content">Сообщение:</label>
+                <div class="col-sm-10">
+                    {{ form.text }}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success">Добавить</button>
+        </form>
+    </div>
+
+{% endblock %}

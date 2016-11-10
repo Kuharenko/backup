@@ -1,0 +1,29 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <div class=".container-fluid">
+        <div class="col-lg-8 col-lg-offset-2">
+            {% for post in list %}
+                <div class="post">
+                    <h3 class="title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+                    <div>
+                        <p class=" description">{{ post.content }}</p>
+                        <p class="date pull-right">{{ post.datetime }}</p>
+                    </div>
+                    <h4 class="">
+                        <span title="Просмотры" class="glyphicon glyphicon-eye-open" aria-hidden="true">
+                        </span> {{ post.get_views }}
+                        <span title="Понравилось" class="glyphicon glyphicon-thumbs-up" aria-hidden="true">
+                        </span> {{ post.get_likes }}
+                        <span title="Комментарии" class="glyphicon glyphicon-thumbs-up" aria-hidden="true">
+                        </span> {% for comm in post.comment_set.all %}
+                        <p>comm.id</p>
+                    {% endfor %}
+                    </h4>
+                </div>
+            {% empty %}
+                <p>Нет постов</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}
