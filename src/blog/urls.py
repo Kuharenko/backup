@@ -1,7 +1,7 @@
 # -*- coding: utf8 -*-
 from django.conf.urls import patterns, url
 from . import views
-
+handler404 = 'app.views.custom_404'
 urlpatterns = patterns('',
                        url(r'^$', views.select_all_posts, name='list'),
                        url(r'^category/$', views.category_list, name='category_list'),
@@ -12,7 +12,8 @@ urlpatterns = patterns('',
                        url(r'^admin/(?P<pk>[0-9]+)/delete/$', views.post_delete, name='post_delete'),
                        url(r'^category/(?P<pk>[0-9]+)/delete/$', views.cat_delete, name='cat_delete'),
                        url(r'^admin/(?P<pk>[0-9]+)/edit/$', views.post_edit, name='post_edit'),
-                       url(r'^admin/comm/(?P<rk>[0-9]+)/(?P<pk>[0-9]+)/delete/$', views.comment_delete, name='comment_delete'),
+                       url(r'^admin/comm/(?P<rk>[0-9]+)/(?P<pk>[0-9]+)/delete/$', views.comment_delete,
+                           name='comment_delete'),
                        url(r'^admin/comm/(?P<pk>[0-9]+)/edit/$', views.comment_edit, name='comment_edit'),
                        url(r'^admin/$', views.adminka, name='admin'),
                        url(r'^(?P<pk>\d+)/addlike/$', views.add_like, name='add_like'),
@@ -23,5 +24,7 @@ urlpatterns = patterns('',
                        url(r'^search/tag/(?P<pk>[0-9]+)$', views.search_by_tag, name='by_tag'),
                        url(r'^register/$', views.register, name='registration'),
                        url(r'^login/$', views.log_in, name='login'),
-                       url(r'^logout/$', views.logout, name='logout')
+                       url(r'^logout/$', views.logout, name='logout'),
+                       url(r'^changepass/$', views.change_pass, name='change_pass'),
                        )
+

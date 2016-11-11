@@ -1,6 +1,5 @@
 # -*- coding: utf8 -*-
 
-
 import re
 from django.utils import timezone
 from blog.forms import *
@@ -8,6 +7,7 @@ from blog.models import Post, Comment, Category, Tags, ClickLike
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
 
 def permission(decorate):
@@ -91,7 +91,7 @@ def view_post(request, pk):
     return render(request, 'blog/post_detail.html', {'post': post, 'form': form})
 
 
-@isSu
+@login_required
 def post_new(request):
     if request.method == "POST":
         form = PostForm(request.POST)
@@ -154,6 +154,7 @@ def post_delete(request, pk):
     return redirect('admin')
 
 
+@login_required
 def add_tag(request):
     if request.user.is_anonymous():
         return render(request, 'blog/deny.html')
@@ -175,7 +176,7 @@ def add_tag(request):
     return render(request, 'blog/tags_add.html', {'form': form})
 
 
-@permission
+@login_required
 def add_category(request):
     form = CategoryForm(request.POST or None)
     if form.is_valid():
@@ -244,11 +245,11 @@ def cat_delete(request, pk):
 
 
 def search_by_category(request, pk):
-    return render(request, 'blog/search.html', {'post': Post.objects.filter(category=pk).order_by('-datetime').all()})
+    return render(request, 'blog/search.html', {'list': Post.objects.filter(category=pk).order_by('-datetime').all()})
 
 
 def search_by_tag(request, pk):
-    return render(request, 'blog/search.html', {'post': Post.objects.filter(tages=pk).order_by('-datetime').all()})
+    return render(request, 'blog/search.html', {'list': Post.objects.filter(tages=pk).order_by('-datetime').all()})
 
 
 def register(request):
@@ -256,40 +257,40 @@ def register(request):
     if form.is_valid():
         usr = form.save(commit=False)
         usr.save()
-        print 'User registered!'+request.POST.get('username')
         return redirect('list')
     return render(request, 'blog/register.html', {'form': form})
 
 
 def log_in(request):
-    # u = request.POST.get('username')
-    # p = request.POST.get('password')
-    #
-    # user = auth.authenticate(username=u, password=p)
-    # print 'user ',u
-    # print 'pass ',p
-    # if user is not None and user.is_active:
-    #     auth.login(request, user)
-    #     return redirect("list")
-    # else:
-    #     return redirect('login')
-
-    form = LoginForm(request.POST or None)
-    print request.POST.get('username')
-    print request.POST.get('password')
-    if form.is_valid():
-        user = auth.authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
-        if user is not None and user.is_activate:
-            auth.login(request, request.POST.get('username'))
-            return redirect('list')
-        else:
-            print 'Error'
+    if request.POST:
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = auth.authenticate(username=username, password=password)
+        if user is not None and user.is_active:
+            auth.login(request, user)
             return redirect('/blog/')
-    else:
-        print form.errors
-    return render(request, 'blog/login.html', {'form': form})
+    return render(request, 'blog/login.html')
 
 
+@login_required
 def logout(request):
     auth.logout(request)
     return redirect('list')
+
+
+@login_required
+def change_pass(request):
+    if request.POST:
+        user = User.objects.get(username=request.user.username)
+        new_pass = request.POST.get('new')
+        conf_pass = request.POST.get('confirm')
+        if new_pass == conf_pass:
+            user.set_password(new_pass)
+            user.save()
+            logout(request)
+            return redirect('login')
+    return render(request, 'blog/change_password.html')
+
+
+def custom_404(request):
+    return render(request, '404.html')

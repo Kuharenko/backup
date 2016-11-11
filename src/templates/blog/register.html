@@ -1,5 +1,6 @@
 {% extends 'blog/base.html' %}
 {% block content %}
+    <div class="col-lg-4 col-lg-offset-3">
     <form class="form-horizontal" action="" method="post">
         {% csrf_token %}
         <div class="form-group">
@@ -16,4 +17,5 @@
         </div>
         <button type="submit" class="btn btn-success">Зарегистрироваться</button>
     </form>
+    </div>
 {% endblock %}
