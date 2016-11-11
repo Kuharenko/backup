@@ -4,13 +4,13 @@
         <form method="post" name="LoginForm" action="/blog/login/">
             {% csrf_token %}
             <div class="form-group">
-                <label class="control-label col-sm-2" for="content">Login:</label>
+                <label class="control-label col-sm-2" for="username">Login:</label>
                 <div class="col-sm-10">
-                   <input type="" id="username" name="username" class="form-control" placeholder="Username">
+                   <input type="text" id="username" name="username" class="form-control" placeholder="Username">
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-2" for="content">Password:</label>
+                <label class="control-label col-sm-2" for="password">Password:</label>
                 <div class="col-sm-10">
                     <input type="password" name="password" class="form-control" id="password" placeholder="Password">
                 </div>

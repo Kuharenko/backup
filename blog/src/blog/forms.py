@@ -3,6 +3,7 @@ from django import forms
 from .models import Post, Comment, Category, Tags
 from django.contrib.auth.models import User
 
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -75,3 +76,9 @@ class RegisterForm(forms.ModelForm):
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'password': forms.PasswordInput(attrs={'class': 'form-control'})
         }
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=200)
+    password = forms.PasswordInput()
+

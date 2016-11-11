@@ -8,7 +8,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
+from django.contrib.auth.hashers import make_password
 
 def permission(decorate):
     def wrapper(request):
@@ -256,8 +258,11 @@ def register(request):
     form = RegisterForm(request.POST or None)
     if form.is_valid():
         usr = form.save(commit=False)
+        usr.password = make_password(request.POST.get('password'))
         usr.save()
         return redirect('list')
+    else:
+        form = RegisterForm()
     return render(request, 'blog/register.html', {'form': form})
 
 
