@@ -92,3 +92,9 @@ body {
     -moz-border-radius:6px 0 6px 6px;
     border-radius:6px 0 6px 6px;
 }
+
+.errorlist{
+    list-style: none;
+    background-color: #d58512;
+    margin-top: 30px;
+}

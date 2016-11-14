@@ -7,8 +7,11 @@
             <label class="control-label col-sm-2" for="content">Логин:</label>
             <div class="col-lg-10">
                 {{ form.username }}
+
             </div>
+
         </div>
+        {{ form.errors.username }}
         <div class="form-group">
             <label class="control-label col-sm-2" for="content">Пароль:</label>
             <div class="col-lg-10">

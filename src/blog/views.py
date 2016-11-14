@@ -255,15 +255,18 @@ def search_by_tag(request, pk):
 
 
 def register(request):
-    form = RegisterForm(request.POST or None)
-    if form.is_valid():
-        usr = form.save(commit=False)
-        usr.password = make_password(request.POST.get('password'))
-        usr.save()
-        return redirect('list')
+    if request.POST:
+        form = RegisterForm(request.POST or None)
+        if form.is_valid():
+            usr = form.save(commit=False)
+            usr.password = make_password(request.POST.get('password'))
+            usr.save()
+            return redirect('list')
+        else:
+            return render(request, 'blog/register.html', {'form': form})
     else:
         form = RegisterForm()
-    return render(request, 'blog/register.html', {'form': form})
+        return render(request, 'blog/register.html', {'form': form})
 
 
 def log_in(request):

@@ -2,6 +2,7 @@
 from django import forms
 from .models import Post, Comment, Category, Tags
 from django.contrib.auth.models import User
+import re
 
 
 class PostForm(forms.ModelForm):
@@ -14,6 +15,13 @@ class PostForm(forms.ModelForm):
             'category': forms.SelectMultiple(attrs={'class': 'form-control', 'required': False}),
             'tages': forms.SelectMultiple(attrs={'class': 'form-control', 'required': False})
         }
+
+    def clean_title(self):
+        text = self.cleaned_data['title']
+        z = re.search('^[a-zA-Z]+$', text)
+        if z is None:
+            raise forms.ValidationError("Заголовок должен содержать только буквы!")
+        return text
 
 
 class CommentForm(forms.ModelForm):
@@ -33,6 +41,12 @@ class CommentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CommentForm, self).__init__(*args, **kwargs)
         self.fields['author'].required = False
+
+    def clean_text(self):
+        text = self.cleaned_data['text']
+        if len(text) < 2:
+            raise forms.ValidationError("Длина сообщения не может быть меньше двух символов!")
+        return text
 
 
 class CategoryForm(forms.ModelForm):
@@ -76,6 +90,13 @@ class RegisterForm(forms.ModelForm):
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'password': forms.PasswordInput(attrs={'class': 'form-control'})
         }
+
+    def clean_username(self):
+        name = self.cleaned_data['username']
+        z = re.search('^[a-zA-Z0-9]+$', name)
+        if z is None:
+            raise forms.ValidationError("Имя пользователя может содержать только буквы и цифры!")
+        return name
 
 
 class LoginForm(forms.Form):
