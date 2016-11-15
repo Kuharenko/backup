@@ -14,14 +14,18 @@
         </p>
         <h2 class="title text-center">{{ post.title }}</h2>
         <p class="detail_descr">{{ post.content }}</p>
-        <h6><p class="pull-right">
-            <b>тэги:</b>
 
-            {% for tag in post.tages.all %}
-                <a href="{% url 'by_tag' pk=tag.pk %}">{{ tag }} </a>
-            {% endfor %}
-        </p>
-        </h6>
+        {% if post.tages.all.count > 0 %}
+
+            <h6><p class="pull-right">
+                <b>тэги:</b>
+
+                {% for tag in post.tages.all %}
+                    <a href="{% url 'by_tag' pk=tag.pk %}">{{ tag }} </a>
+                {% endfor %}
+            </p>
+            </h6>
+        {% endif %}
         <h3 class="">
             <a title="Понравилось" class="btn btn-success"
                href="{{ post.get_absolute_url }}addlike/?next={{ post.get_absolute_url|urlencode:"" }}">
@@ -32,7 +36,6 @@
         <div class="col-lg-8 col-lg-offset-2 detail">
             <h2 class="text-center">Комментарии</h2>
             <div class="comments">
-
                 {% for comment in post.comment_set.all %}
                     <blockquote>
         <span>

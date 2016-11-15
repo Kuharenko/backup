@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 
 from django.contrib.auth.hashers import make_password
 
+
 def permission(decorate):
     def wrapper(request):
         if request.user.is_anonymous():
@@ -57,7 +58,7 @@ def add_like(request, pk):
     return redirect(request.GET.get('next', '/'))
 
 
-def PostsListView(request):
+def select_all_posts(request):
     post = Post.objects.filter().order_by('-datetime').all()
     comment = Comment.objects.all()
     paginator = Paginator(post, 5)
@@ -70,12 +71,7 @@ def PostsListView(request):
     except EmptyPage:
         post = paginator.page(paginator.num_pages)
 
-    return render(request, 'blog/search.html', {'post': post, 'comm': comment})
-
-
-def select_all_posts(request):
-    post = Post.objects.all()
-    return render(request, 'blog/search.html', {'list': post})
+    return render(request, 'blog/search.html', {'list': post, 'comm': comment})
 
 
 def view_post(request, pk):
@@ -204,15 +200,15 @@ def category_list(request):
 
 @isSu
 def category_edit(request, pk):
-    comm = get_object_or_404(Category, pk=pk)
+    cat = get_object_or_404(Category, pk=pk)
     if request.method == "POST":
-        form = CategoryForm(request.POST, instance=comm)
+        form = CategoryForm(request.POST, instance=cat)
         if form.is_valid():
-            comm = form.save(commit=False)
-            comm.save()
+            cat = form.save(commit=False)
+            cat.save()
             return redirect('post_new')
     else:
-        form = CategoryForm(instance=comm)
+        form = CategoryForm(instance=cat)
     return render(request, 'blog/category_edit.html', {'form': form})
 
 

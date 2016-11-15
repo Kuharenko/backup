@@ -19,12 +19,12 @@ from django.conf.urls.static import static
 
 admin.autodiscover()
 urlpatterns = [
-	url(r'^blog/', include('blog.urls')),
+    url(r'^blog/', include('blog.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', include('app.urls')),
     url(r'^pols/', include('pols.urls')),
 ]
 
 if settings.DEBUG:
-	urlpatterns+= static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns+= static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

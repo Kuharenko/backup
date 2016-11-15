@@ -23,21 +23,21 @@
         {% endfor %}
         <nav aria-label="Page navigation" class="text-center">
             <ul class="pagination">
-                {% if post.has_previous %}
+                {% if list.has_previous %}
                     <li>
-                        <a href="?page={{ post.previous_page_number }}" aria-label="Previous">
+                        <a href="?page={{ list.previous_page_number }}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                 {% endif %}
                 <li>
                 <span class="current">
-                        {{ post.number }} / {{ post.paginator.num_pages }}
+                        {{ list.number }} / {{ list.paginator.num_pages }}
                  </span>
                 </li>
-                {% if post.has_next %}
+                {% if list.has_next %}
                     <li>
-                        <a href="?page={{ post.next_page_number }}" aria-label="Next">
+                        <a href="?page={{ list.next_page_number }}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>

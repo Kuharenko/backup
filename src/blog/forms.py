@@ -13,7 +13,7 @@ class PostForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'content': forms.Textarea(attrs={'class': 'form-control'}),
             'category': forms.SelectMultiple(attrs={'class': 'form-control', 'required': False}),
-            'tages': forms.SelectMultiple(attrs={'class': 'form-control', 'required': False})
+            'tages': forms.SelectMultiple(attrs={'class': 'form-control', 'required': False},)
         }
 
     def clean_title(self):
@@ -76,6 +76,13 @@ class TagsForm(forms.ModelForm):
             'tag_name': forms.TextInput(attrs={'class': 'form-control'}),
            # 'tag_description': forms.Textarea(attrs={'class': 'form-control'})
         }
+
+    def clean_tag_name(self):
+        name = self.cleaned_data['tag_name']
+        z = re.search('^[a-zA-Z]+$', name)
+        if z is None:
+            raise forms.ValidationError("Тэги должны содержать только буквы!")
+        return name
 
 
 class RegisterForm(forms.ModelForm):

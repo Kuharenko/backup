@@ -28,7 +28,7 @@ class Post(models.Model):
     datetime = models.DateTimeField("data")  # дата публикации
     content = models.TextField(max_length=10000)  # текст поста
     category = models.ManyToManyField(Category)
-    tages = models.ManyToManyField(Tags)
+    tages = models.ManyToManyField(Tags, blank=True)
     views_count = models.IntegerField(default=0)
     likes_count = models.IntegerField(default=0)
 
