@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="col-lg-9 col-lg-offset-1">
-        {% for post in posts %}
+        {% for post in posts_with_category %}
             <div class="post">
                 <h3 class="title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
                 <div>
@@ -40,21 +40,21 @@
         {% endfor %}
         <nav aria-label="Page navigation" class="text-center">
             <ul class="pagination">
-                {% if posts.has_previous %}
+                {% if posts_with_category.has_previous %}
                     <li>
-                        <a href="?page={{ posts.previous_page_number }}" aria-label="Previous">
+                        <a href="?page={{ posts_with_category.previous_page_number }}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                 {% endif %}
                 <li>
                 <span class="current">
-                        {{ posts.number }} / {{ posts.paginator.num_pages }}
+                        {{ posts_with_category.number }} / {{ posts_with_category.paginator.num_pages }}
                  </span>
                 </li>
-                {% if posts.has_next %}
+                {% if posts_with_category.has_next %}
                     <li>
-                        <a href="?page={{ posts.next_page_number }}" aria-label="Next">
+                        <a href="?page={{ posts_with_category.next_page_number }}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>

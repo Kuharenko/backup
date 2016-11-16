@@ -16,13 +16,13 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+import views
 
 admin.autodiscover()
 urlpatterns = [
     url(r'^blog/', include('blog.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', include('app.urls')),
-    url(r'^pols/', include('pols.urls')),
+    url(r'^$', views.home, name='home'),
 ]
 
 if settings.DEBUG:

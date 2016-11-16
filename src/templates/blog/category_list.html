@@ -6,19 +6,18 @@
 {% block content %}
     <div class=".container-fluid">
         <div class="col-lg-8 col-lg-offset-2">
-            {% for post in list %}
+            {% for category in categories %}
                 <div class="post">
 
-                    <h3 class="title"><a href="{%  url 'category_edit' pk=post.pk %}">{{ post.category_name }}</a></h3>
-                    <a href="{% url 'cat_delete' pk=post.pk %}"><span class="glyphicon glyphicon-remove pull-right szc" aria-hidden="true"></span></a>
+                    <h3 class="title"><a href="{%  url 'category_edit' category_id=category.pk %}">{{ category.category_name }}</a></h3>
+                    <a href="{% url 'cat_delete' category_id=category.pk %}"><span class="glyphicon glyphicon-remove pull-right szc" aria-hidden="true"></span></a>
 
                     <div>
-                        <p class=" description">{{ post.category_description }}</p>
+                        <p class=" description">{{ category.category_description }}</p>
                     </div>
                 </div>
             {% empty %}
-                <p>Нет постов</p>
-
+                <p>Нет категорий</p>
             {% endfor %}
         </div>
     </div>

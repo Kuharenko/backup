@@ -44,8 +44,11 @@ class CommentForm(forms.ModelForm):
 
     def clean_text(self):
         text = self.cleaned_data['text']
+        z = re.search('^([a-zA-Z0-9]+\s{0,1})+$', text)
         if len(text) < 2:
             raise forms.ValidationError("Длина сообщения не может быть меньше двух символов!")
+        if z is None:
+            raise forms.ValidationError("в сообщении должны быть буквы/цифры")
         return text
 
 
@@ -79,7 +82,18 @@ class TagsForm(forms.ModelForm):
 
     def clean_tag_name(self):
         name = self.cleaned_data['tag_name']
-        z = re.search('^[a-zA-Z]+$', name)
+        z = re.search('^([a-zA-Z]+\s{0,1})+$', name)
+
+        # tags_array = []
+        #
+        # tags = str(name).split()
+        # print name
+        # for i in tags:
+        #     match = re.match(r'^[A-Za-z]+$', i)
+        #     if match:
+        #         tags_array.append(i)
+        #     else:
+        #         raise forms.ValidationError("Тэги должны содержать только буквы!")
         if z is None:
             raise forms.ValidationError("Тэги должны содержать только буквы!")
         return name
@@ -109,4 +123,39 @@ class RegisterForm(forms.ModelForm):
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=200)
     password = forms.PasswordInput()
+
+
+class ChangePass(forms.Form):
+    newpass = forms.CharField(widget=forms.PasswordInput)
+    newpass2 = forms.CharField(widget=forms.PasswordInput)
+
+    def clean_newpass(self):
+        password = self.cleaned_data['newpass']
+        z = re.search('^[a-zA-Z0-9]+$', password)
+        if len(password) < 8:
+            raise forms.ValidationError("Пароль должен содержать 8 символов и больше")
+
+        if z is None:
+            raise forms.ValidationError("только буквы/цифры")
+        return password
+
+    def clean_newpass2(self):
+        password = self.cleaned_data['newpass2']
+        z = re.search('^[a-zA-Z0-9]+$', password)
+        if len(password) < 8:
+            raise forms.ValidationError("Пароль должен содержать 8 символов и больше")
+        if z is None:
+            raise forms.ValidationError("только буквы/цифры")
+        return password
+
+    def clean(self):
+        cleaned_data = super(ChangePass, self).clean()
+        p1 = cleaned_data.get("newpass")
+        p2 = cleaned_data.get("newpass2")
+
+        if p1 == p2:
+            return p1
+        else:
+            raise forms.ValidationError('Пароли не совпадают')
+
 

@@ -2,21 +2,19 @@
 {% block title %}Register{% endblock %}
 {% block content %}
     <div class="col-lg-4 col-lg-offset-3">
-    <form class="form-horizontal" action="" method="post">
+    <form class="form-horizontal" method="post">
         {% csrf_token %}
         <div class="form-group">
             <label class="control-label col-sm-2" for="content">Логин:</label>
             <div class="col-lg-10">
-                {{ form.username }}
-
+                {{ registration_form.username }}
             </div>
-
         </div>
-        {{ form.errors.username }}
+        {{ registration_form.errors.username }}
         <div class="form-group">
             <label class="control-label col-sm-2" for="content">Пароль:</label>
             <div class="col-lg-10">
-                {{ form.password }}
+                {{ registration_form.password }}
             </div>
         </div>
         <button type="submit" class="btn btn-success">Зарегистрироваться</button>
