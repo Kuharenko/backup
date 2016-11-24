@@ -7,7 +7,7 @@
                 <div class="post">
                     <h3 class="title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
                     <div>
-                        <p class=" description">{{ post.content }}</p>
+                        <p class=" description">{{ post.content|safe }}</p>
                         <p class="date pull-right">{{ post.datetime }}</p>
                     </div>
                     <h4 class="">

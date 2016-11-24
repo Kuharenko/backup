@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> test</title>
+
+</head>
+<body>
+<h1 id="test">{{ variable }}</h1>
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+
+    $(function() {
+      $("#test").click(function() {
+         $.get("/get_req/", function(data) {
+            console.log(data);
+         });
+      });
+    });
+</script>
+</body>
+</html>

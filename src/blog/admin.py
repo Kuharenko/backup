@@ -9,9 +9,19 @@ from blog.models import Post  # наша модель из blog/models.py
 
 from blog.models import Comment, Category, Tags, ClickLike  # наша модель из blog/models.py
 
-admin.site.register(Post)
+
+#admin.site.register(Post)
 admin.site.register(Comment)
 admin.site.register(Category)
 admin.site.register(Tags)
 admin.site.register(ClickLike)
+
+
+class CollectionAdmin(admin.ModelAdmin):
+    class Media:
+        js = (
+            '/static/tiny_mce/tiny_mce.js',
+            '/static/tiny_mce/tiny_mce_init.js',
+        )
+admin.site.register(Post, CollectionAdmin)
 

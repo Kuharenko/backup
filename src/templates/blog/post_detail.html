@@ -1,9 +1,17 @@
 {% extends 'blog/base.html' %}
+<script>
+
+
+</script>
 {% block content %}
     <div class="col-lg-8 col-lg-offset-2 detail">
         {% if user.is_superuser %}
-            <a href="{% url 'post_edit' post_id=post.pk %}"><span class="sz glyphicon glyphicon-pencil pull-right" aria-hidden="true"></span></a>
-            <a href="{% url 'post_delete' post_id=post.pk %}"><span class="glyphicon glyphicon-remove pull-right szc" aria-hidden="true"></span></a>
+
+            <form action="http://localhost:8000/blog/admin/{{ post.pk }}/edit/" method="post" class="pull-right">
+                {% csrf_token %}
+                <button type="submit" name="edit" class="btn btn-default"><span class="sz glyphicon glyphicon-pencil pull-right" aria-hidden="true"></span></button>
+                <button type="submit" name="delete" class="btn btn-default" onclick="return confirm('Точно удалить?')"><span class="glyphicon glyphicon-remove pull-right szc" aria-hidden="true"></span></button>
+            </form>
         {% endif %}
         <p>{{ post.datetime }}</p>
         <p><b>Категории:</b>
@@ -12,7 +20,7 @@
             {% endfor %}
         </p>
         <h2 class="title text-center">{{ post.title }}</h2>
-        <p class="detail_descr">{{ post.content }}</p>
+        <p class="detail_descr">{{ post.content|safe }}</p>
         {% if post.tages.all.count > 0 %}
             <h6><p class="pull-right">
                 <b>тэги:</b>
@@ -25,9 +33,12 @@
         {% endif %}
         <h3>
             {% if request.user.is_authenticated %}
-                <a title="Понравилось" class="btn btn-success"
-                   href="{{ post.get_absolute_url }}addlike/?next={{ post.get_absolute_url|urlencode:"" }}">
-                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> {{ post.get_likes }}</a>
+                <a title="Понравилось" class="btn btn-success" id="click_like">
+                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                    <span id="likes_count">{{ post.get_likes }}</span>
+                </a>
+
+
             {% else %}
                 <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> {{ post.get_likes }}
             {% endif %}
@@ -78,4 +89,21 @@
             <button type="submit" class="btn btn-success">Добавить</button>
         </form>
     </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        $(function() {
+            $("#click_like").click(function() {
+                $.get("/blog/{{ post.pk }}/addlike/", function(data) {
+                    if(data==200){
+                        $("#likes_count").text(function(i, current_count_likes){
+                            return parseInt(current_count_likes)+1;
+                        })
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

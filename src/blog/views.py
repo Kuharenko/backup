@@ -3,7 +3,7 @@
 from django.utils import timezone
 from blog.forms import *
 from blog.models import Post, Comment, Category, Tags, ClickLike
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -39,7 +39,6 @@ def adminka(request):
     return {'posts': posts}
 
 
-
 def index(request):
     return render(request, 'blog/post_list.html')
 
@@ -54,8 +53,8 @@ def add_like(request, pk):
             cl = ClickLike.objects.create(post=article, user=request.user.id)
             cl.save()
             article.save()
-            return redirect(request.GET.get('next', '/'))
-    return redirect(request.GET.get('next', '/'))
+            return HttpResponse(200)
+    return HttpResponse(400)
 
 
 @render_to('blog/search.html')
@@ -80,7 +79,7 @@ def view_post(request, post_id):
     comment_form = CommentForm(request.POST or None)
     if not request.session.get('views'):
         request.session['views']=True
-        request.session.set_expiry(300)
+        request.session.set_expiry(3000)
         post.views_count += 1
         post.save()
     if request.POST:
@@ -116,39 +115,46 @@ def post_new(request):
             post.category = cats
             post.tages = tags
             post.save()
-            return redirect('post_detail', pk=post.pk)
+            return redirect('post_detail', post_id=post.pk)
     return {'post_add_form': post_add_form}
 
 
 @login_required
 @render_to('blog/post_edit.html')
 def post_edit(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
-    post_form = PostForm(request.POST or None, instance=post)
-    if request.POST:
-        cats = []
-        tags = []
 
-        for categories in request.POST.getlist('category'):
-            cats.append(int(categories))
-        for tages in request.POST.getlist('tages'):
-            tags.append(int(tages))
+    if 'edit' in request.POST:
+        post = get_object_or_404(Post, pk=post_id)
+        post_form = PostForm(request.POST or None, instance=post)
+        if request.POST:
+            cats = []
+            tags = []
 
-        if post_form.is_valid():
-            post = post_form.save(commit=False)
-            post.datetime = timezone.now()
-            post.category = cats
-            post.tages = tags
-            post.save()
-            return redirect('post_detail', post_id=post.pk)
-    return {'post_add_form': post_form}
+            for categories in request.POST.getlist('category'):
+                cats.append(int(categories))
+            for tages in request.POST.getlist('tages'):
+                tags.append(int(tages))
+
+            if post_form.is_valid():
+                post = post_form.save(commit=False)
+                post.datetime = timezone.now()
+                post.category = cats
+                post.tages = tags
+                post.save()
+                return redirect('post_detail', post_id=post.pk)
+        return {'post_add_form': post_form}
+    elif 'delete' in request.POST:
+        instance = Post.objects.get(id=post_id)
+        instance.delete()
+        return redirect('admin')
 
 
-@isSu
+@login_required
 def post_delete(request, post_id):
     instance = Post.objects.get(id=post_id)
     instance.delete()
-    return redirect('admin')
+    return HttpResponse(200)
+        #redirect('admin')
 
 
 @login_required

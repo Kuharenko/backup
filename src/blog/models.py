@@ -3,9 +3,10 @@
 
 from django.utils import timezone
 from django.db import models
-
+from tinymce.models import HTMLField
 
 # Create your models here.
+
 
 class Category(models.Model):
     category_name = models.CharField(max_length=30, unique=True)
@@ -26,7 +27,8 @@ class Tags(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=255)  # заголовок поста
     datetime = models.DateTimeField("data")  # дата публикации
-    content = models.TextField(max_length=10000)  # текст поста
+    content = HTMLField()
+    #content = models.TextField(max_length=10000)  # текст поста
     category = models.ManyToManyField(Category)
     tages = models.ManyToManyField(Tags, blank=True)
     views_count = models.IntegerField(default=0)

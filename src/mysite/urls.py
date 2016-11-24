@@ -23,6 +23,9 @@ urlpatterns = [
     url(r'^blog/', include('blog.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.home, name='home'),
+    url(r'^test/$', views.test, name='test'),
+    url(r'^get_req/$', views.get_req, name='req'),
+    url(r'^tinymce/', include('tinymce.urls')),
 ]
 
 if settings.DEBUG:

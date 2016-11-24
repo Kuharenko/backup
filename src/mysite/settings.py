@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from os.path import join, dirname, realpath
 
+ROOT_PATH = dirname(realpath(__file__))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -40,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
+    'tinymce',
     'annoying',
 )
 
@@ -113,3 +116,15 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn")
+
+MEDIA_ROOT = join(ROOT_PATH, "media")
+MEDIA_URL = '/media/'
+ADMIN_MEDIA_PREFIX = '/static/admin/'
+
+TINYMCE_DEFAULT_CONFIG = {
+    'theme': 'advanced',
+    'theme_advanced_toolbar_location': "top",
+    'theme_advanced_toolbar_align': "left",
+    'skin': "o2k7",
+    "file_browser_callback" : "CustomFileBrowser",
+}
